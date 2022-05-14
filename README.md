@@ -1,27 +1,23 @@
 # Visual Geolocation: Approaches, Challenges, and Insights
 
-## STEPHEN SCARANO,University of Massachusetts, Amherst, USA
+### STEPHEN SCARANO, University of Massachusetts, Amherst, USA
 
 
-I explore multiple approaches to the problem of Visual Geolocation applied to Google Street View data of
-Pittsburgh, PA and Orlando, FL. I propose two approaches unique to this setting which I call **Panoramic Macro-Classification** and **Clustered Local-Classification** which both demonstrate significant improvement to
-model performance, the latter of which necessitates negligible computational cost. The trained model itself
-demonstrates attention to characteristic structures: building textures, skylines, cars, but also human agents.
-Additional Key Words and Phrases: neural networks, convolutional neural networks, geolocation
+I explore multiple approaches to the problem of Visual Geolocation applied to Google Street View data of Pittsburgh, PA and Orlando, FL. I propose two approaches unique to this setting which I call *Panoramic Macro-Classification* and *Clustered Local-Classification* which both demonstrate significant improvement to model performance, the latter of which necessitates negligible computational cost. The trained model itself demonstrates attention to characteristic structures: building textures, skylines, cars, but also human agents. Additional Key Words and Phrases: neural networks, convolutional neural networks, geolocation.
 
 ### 1 INTRODUCTION
 
-I define **Visual Geolocation** as the identification or approximation of a geographic position based on
-visual information. Previous research [ 4 , 6 ] from which this paper is inspired coins the similar term
-Photo Geolocation; however, it is my feeling that this language limits the scope of our shared problem.
+I define *Visual Geolocation* as the identification or approximation of a geographic position based on
+visual information. Previous research [4 , 6] from which this paper is inspired coins the similar term
+*Photo Geolocation*; however, it is my feeling that this language limits the scope of our shared problem.
 Indeed, much of this paper concerns itself with panoramas fixed in space (i.e multiple-perspective
 images fixed at a single point), and thus our approach may do well to consider more than atomized
 image inputs.
 Instead, I subdivide the problem of Visual Geolocation into two approachable tasks:
 
-I. Macro-Identification: Provided information from one or more foreign, distinguished locations,
+I. **Macro-Identification**: Provided information from one or more foreign, distinguished locations,
 classify the location of a new instance.
-II. Local-Identification: Provided informationwithina particular geographic boundary, estimate
+II. **Local-Identification**: Provided informationwithina particular geographic boundary, estimate
 a new instance’s relative location.
 
 Note that this framing is a largely practical construction: in many ways these problems are re-
@@ -31,40 +27,39 @@ lend itself to coordinate regression. It is my goal in this paper to compare, co
 foundational approaches to the Macro and Local Identification problems using a basic convolutional
 neural network (CNN) architecture. These approaches are outlined below:
 
-1. Conventional Macro-Classification: Likely the most intuitive approach to Macro-Identification.
-By labeling singular images by city, we train our CNN in a classification setting.
-2. Panoramic Macro-Classification: Structurally the same approach as above; but here we
-append two images at the same point width-wise together, essentially forming a panorama
+1. *Conventional Macro-Classification*: Likely the most intuitive approach to Macro-Identification. By labeling singular images by city, we train our CNN in a classification setting.
+2. *Panoramic Macro-Classification*: Structurally the same approach as above; but here we append two images at the same point width-wise together, essentially forming a panorama
 at that point.
-3. Local-Regression: Likely the most intuitive approach to Local-Identification. By tagging
-each image by its coordinates, we train our CNN in a regression setting.
-4. Partitioned Local-Classification: By partitioning the city-space, we label each image by
-its side of the dividing line, transforming Local-Identification into a classification problem.
-5. Clustered Local-Classification: Similar to the above approach, we instead label each image
-with respect to a K-means clustering of the training instances.
-```
-2 RELATED WORK
+3. *Local-Regression*: Likely the most intuitive approach to Local-Identification. By tagging each image by its coordinates, we train our CNN in a regression setting.
+4. *Partitioned Local-Classification*: By partitioning the city-space, we label each image by its side of the dividing line, transforming Local-Identification into a classification problem.
+5. *Clustered Local-Classification*: Similar to the above approach, we instead label each image with respect to a K-means clustering of the training instances.
+
+### 2. RELATED WORK
 Early work in Photo Geolocation compared query images (or relevant computed features of query
 images) to those of an accompanying dataset, where the breadth of the problem was in developing
-successful distance functions [ 1 , 7 ]. While promising, these methods necessitate the continu-
+successful distance functions [1 , 7]. While promising, these methods necessitate the continu-
 ous maintenance of comparison datasets, and the Nearest-Neighbor approach itself suffers from
 significant computational burden during test-time. It is for these reasons—alongside significant
 performance improvements—that convolutional neural networks have proved promising tools in
 visual geolocation tasks.
+
+
 PlaNETwas the first global-scale CNN developed which surpassed the state of the art benchmarks
 previously held by IM2GPS, a comparatively complex Nearest-Neighbors model. Its inventors
 divided the world map into a number of disjoint cells, spanning most of the world’s surface, and
-labeled training images accordingly to establish a classification setting [ 6 ]. There are a number
+labeled training images accordingly to establish a classification setting [6]. There are a number
 of advantages to this: First, performing regression on coordinates widens the solution space,
 particularly troublesome since not all coordinate positions are represented (nor should they since
 not all positions may be relevant). Second, a classification context enables anadjustable degree of
 granularityto our predictions; by increasing or decreasing the number of partitions in a space, we
 essentially scale the ambition of our predictions.
+
+
 Following success, researchers expanded uponPlaNETby incorporating apriori knowledge;
 specifically, extracting thescene contentof the image (i.eindoors, outdoors, urban, natural, etc.)
-to consider before classification—thus learning unique features for each class [ 4 ]. Despite their
+to consider before classification—thus learning unique features for each class [4]. Despite their
 differences, however, bothPlaNETand its hierarchical successor are built on top of Google’s
-Inceptionarchitecture [ 4 – 6 ].Inceptionwas built as a workaround to the depth-parameter trade-off
+Inceptionarchitecture [4,6].Inceptionwas built as a workaround to the depth-parameter trade-off
 common to neural networks: by increasing the depth and width of a network, we can improve
 performance but only at heightened computational stress and risk of over-fitting. The authors
 identify theInception nodeas its central innovation; it works, mainly, by allowing a network to

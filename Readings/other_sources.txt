@@ -1,0 +1,2 @@
+Informal Information:
+ - How to / How Not to do Geolocation: https://medium.com/analytics-vidhya/photo-geolocation-with-neural-networks-how-to-and-how-not-to-8aa7f10abb34 

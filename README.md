@@ -2,37 +2,35 @@
 
 ## STEPHEN SCARANO,University of Massachusetts, Amherst, USA
 
-```
+
 I explore multiple approaches to the problem of Visual Geolocation applied to Google Street View data of
-Pittsburgh, PA and Orlando, FL. I propose two approaches unique to this setting which I callPanoramic
-Macro-ClassificationandClustered Local-Classificationwhich both demonstrate significant improvement to
+Pittsburgh, PA and Orlando, FL. I propose two approaches unique to this setting which I call **Panoramic Macro-Classification** and **Clustered Local-Classification** which both demonstrate significant improvement to
 model performance, the latter of which necessitates negligible computational cost. The trained model itself
 demonstrates attention to characteristic structures: building textures, skylines, cars, but also human agents.
 Additional Key Words and Phrases: neural networks, convolutional neural networks, geolocation
-```
 
 ### 1 INTRODUCTION
-```
-I define Visual Geolocationas the identification or approximation of a geographic position based on
+
+I define **Visual Geolocation** as the identification or approximation of a geographic position based on
 visual information. Previous research [ 4 , 6 ] from which this paper is inspired coins the similar term
 Photo Geolocation; however, it is my feeling that this language limits the scope of our shared problem.
 Indeed, much of this paper concerns itself with panoramas fixed in space (i.e multiple-perspective
 images fixed at a single point), and thus our approach may do well to consider more than atomized
 image inputs.
 Instead, I subdivide the problem of Visual Geolocation into two approachable tasks:
-```
+
 I. Macro-Identification: Provided information from one or more foreign, distinguished locations,
 classify the location of a new instance.
 II. Local-Identification: Provided informationwithina particular geographic boundary, estimate
 a new instance’s relative location.
-```
+
 Note that this framing is a largely practical construction: in many ways these problems are re-
 wordings of one another; yet, eachsuggestsa different approach with a different goal. For instance,
 Macro-Identification is easily interpreted as a classification problem and Local-Identification might
 lend itself to coordinate regression. It is my goal in this paper to compare, contrast, and introduce
 foundational approaches to the Macro and Local Identification problems using a basic convolutional
 neural network (CNN) architecture. These approaches are outlined below:
-```
+
 1. Conventional Macro-Classification: Likely the most intuitive approach to Macro-Identification.
 By labeling singular images by city, we train our CNN in a classification setting.
 2. Panoramic Macro-Classification: Structurally the same approach as above; but here we

@@ -17,6 +17,7 @@ Instead, I subdivide the problem of Visual Geolocation into two approachable tas
 
 I. **Macro-Identification**: Provided information from one or more foreign, distinguished locations,
 classify the location of a new instance.
+
 II. **Local-Identification**: Provided informationwithina particular geographic boundary, estimate
 a new instance’s relative location.
 

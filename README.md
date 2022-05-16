@@ -36,36 +36,11 @@ at that point.
 5. *Clustered Local-Classification*: Similar to the above approach, we instead label each image with respect to a K-means clustering of the training instances.
 
 ### 2. RELATED WORK
-Early work in Photo Geolocation compared query images (or relevant computed features of query
-images) to those of an accompanying dataset, where the breadth of the problem was in developing
-successful distance functions [1,7]. While promising, these methods necessitate the continu-
-ous maintenance of comparison datasets, and the Nearest-Neighbor approach itself suffers from
-significant computational burden during test-time. It is for these reasons—alongside significant
-performance improvements—that convolutional neural networks have proved promising tools in
-visual geolocation tasks.
+Early work in Photo Geolocation compared query images (or relevant computed features of query images) to those of an accompanying dataset, where the breadth of the problem was in developing successful distance functions [1,7]. While promising, these methods necessitate the continuous maintenance of comparison datasets, and the Nearest-Neighbor approach itself suffers from significant computational burden during test-time. It is for these reasons—alongside significant performance improvements—that convolutional neural networks have proved promising tools in visual geolocation tasks.
 
+_PlaNET_ was the first global-scale CNN developed which surpassed the state of the art benchmarks previously held by IM2GPS, a comparatively complex Nearest-Neighbors model. Its inventors divided the world map into a number of disjoint cells, spanning most of the world’s surface, and labeled training images accordingly to establish a classification setting [6]. There are a number of advantages to this: First, performing regression on coordinates widens the solution space, particularly troublesome since not all coordinate positions are represented (nor should they since not all positions may be relevant). Second, a classification context enables anadjustable degree of granularityto our predictions; by increasing or decreasing the number of partitions in a space, we essentially scale the ambition of our predictions.
 
-PlaNETwas the first global-scale CNN developed which surpassed the state of the art benchmarks
-previously held by IM2GPS, a comparatively complex Nearest-Neighbors model. Its inventors
-divided the world map into a number of disjoint cells, spanning most of the world’s surface, and
-labeled training images accordingly to establish a classification setting [6]. There are a number
-of advantages to this: First, performing regression on coordinates widens the solution space,
-particularly troublesome since not all coordinate positions are represented (nor should they since
-not all positions may be relevant). Second, a classification context enables anadjustable degree of
-granularityto our predictions; by increasing or decreasing the number of partitions in a space, we
-essentially scale the ambition of our predictions.
-
-
-Following success, researchers expanded uponPlaNETby incorporating apriori knowledge;
-specifically, extracting thescene contentof the image (i.eindoors, outdoors, urban, natural, etc.)
-to consider before classification—thus learning unique features for each class [4]. Despite their
-differences, however, bothPlaNETand its hierarchical successor are built on top of Google’s
-Inceptionarchitecture [4,6].Inceptionwas built as a workaround to the depth-parameter trade-off
-common to neural networks: by increasing the depth and width of a network, we can improve
-performance but only at heightened computational stress and risk of over-fitting. The authors
-identify theInception nodeas its central innovation; it works, mainly, by allowing a network to
-weight different filtersizesduring training by concatenating the feature outputs of multiple kernel
-sizes, largely escaping explosive computational overhead [5].
+Following success, researchers expanded upon _PlaNET_ by incorporating apriori knowledge; specifically, extracting thescene contentof the image (i.e indoors, outdoors, urban, natural, etc.) to consider before classification—thus learning unique features for each class [4]. Despite their differences, however, both _PlaNET_ and its hierarchical successor are built on top of Google’s _Inception_ architecture [4,6]. _Inception_ was built as a workaround to the depth-parameter trade-off common to neural networks: by increasing the depth and width of a network, we can improve performance but only at heightened computational stress and risk of over-fitting. The authors identify theInception nodeas its central innovation; it works, mainly, by allowing a network to weight different filter sizes during training by concatenating the feature outputs of multiple kernel sizes, largely escaping explosive computational overhead [5].
 
 ![Three Perspective Images From Single Point in Space](./figures/fig_1.png)
 ```
@@ -79,7 +54,7 @@ Table 1. Architecture of Conventional CNN
 
 ### 3. APPROACH
 
-I intend to evaluate differing visual geolocation approaches by comparative analysis. Each of the trials (Conventional Macro-Classification (CMC), Panoramic Macro-Classification (PMC), Local-Regression (LR), Partitioned Local-Classification (PLC), and Clustered Local-Classification (CLC)) described in further detail below are applied to a publicly available Google Street-View dataset provided by theCenter for Research in Computer Vision[ 7 ]. The set of nearly 63,000 images contains roughly 13,000 points in space which each correspond to 5 perspective images; which together comprise a 360◦ view (excluding downward) from each spot. The placemarks are split relatively evenly between Pittsburgh, PA, Orlando, FL, and downtown Manhattan, NY, with a slight bias in favor of the former two cities.In addition, we execute these approaches utilizing an identical CNN architecture as described in Table 1; however, particular approaches necessitate slight accommodations: For instance, local regression follows itsLinearlayer with anL1 Lossfunction in place ofSoftmax, and Panoramic Macro-Classification takes input dimensions of double the conventional width. All of these changes will be listed in detail in the Experiment section below. Instead, this section lists my intuitions for each approach.
+I intend to evaluate differing visual geolocation approaches by comparative analysis. Each of the trials (Conventional Macro-Classification (CMC), Panoramic Macro-Classification (PMC), Local-Regression (LR), Partitioned Local-Classification (PLC), and Clustered Local-Classification (CLC)) described in further detail below are applied to a publicly available Google Street-View dataset provided by the _Center for Research in Computer Vision_[7]. The set of nearly 63,000 images contains roughly 13,000 points in space which each correspond to 5 perspective images; which together comprise a 360◦ view (excluding downward) from each spot. The placemarks are split relatively evenly between Pittsburgh, PA, Orlando, FL, and downtown Manhattan, NY, with a slight bias in favor of the former two cities. In addition, we execute these approaches utilizing an identical CNN architecture as described in Table 1; however, particular approaches necessitate slight accommodations: For instance, local regression follows its _Linear_ layer with an _L1_ Loss function in place of _Softmax_, and Panoramic Macro-Classification takes input dimensions of double the conventional width. All of these changes will be listed in detail in the Experiment section below. Instead, this section lists my intuitions for each approach.
 
 
 #### 3.1. Conventional Macro-Classification
@@ -87,15 +62,11 @@ Conventional Macro-Classification intends to discriminate between two or more di
 
 
 #### 3.2. Panoramic Macro-Classification
-Panoramic Macro-Classification builds upon CMC with additional benefits and drawbacks. By
-appending two or more perspectives from the same point, we essentially provide our model a
-"human view" at that point in space. In real terms, we increase the descriptive potential of each
-instance—at the cost of the training set size; yet even dismissing the increase to the feature-space,
-appending images may aid to combatdud imageswhich provide very little information (say, the side
+Panoramic Macro-Classification builds upon CMC with additional benefits and drawbacks. By appending two or more perspectives from the same point, we essentially provide our model a "human view" at that point in space. In real terms, we increase the descriptive potential of each instance—at the cost of the training set size; yet even dismissing the increase to the feature-space, appending images may aid to combatdud imageswhich provide very little information (say, the side of a wall). One potential work-around to the halved training set size could be a reverse-appending of each instance.
 
 ![Panoramic Instance](./figures/fig_2.png)
 ```
-Fig. 2. Example of a PMC instance appending two perspectives from the same image of a wall). One potential work-around to the halved training set size could be a reverse-appending of each instance.
+Fig. 2. Example of a PMC instance appending two perspectives from the same image 
 ```
 
 #### 3.3. Local Regression
@@ -106,14 +77,11 @@ Partitioned Local-Classification is the contemporary go-to workaround to the con
 
 ![Clustered vs. Partitioned Coordinate Groupings](./figures/fig_3.png)
 ```
-Fig. 3. Pittsburgh data instances partitioned by arbitrary boundary (left) vs. clustered grouping (right). The
-clustering appears to naturally group points into city outskirts and the city center.
+Fig. 3. Pittsburgh data instances partitioned by arbitrary boundary (left) vs. clustered grouping (right). The clustering appears to naturally group points into city outskirts and the city center.
 ```
 
 #### 3.5 Clustered Local-Classification
-I believe Clustered Local-Classification is my largest contribution to the visual geolocation field,
-sharpening the rough edges of the PLC approach. Rather than choosing an arbitrary set of gridlines
-to divide up a local area, we instead take inspiration from the R-CNN architecture, proposing potential division lines with apriori information [ 3 ]. While the potential applications are vast, the scope of this paper will concern a K-Means clustering of points by coordinate distance. I hope to demonstrate that these "natural" division lines lay a firmer groundwork for classification.
+I believe Clustered Local-Classification is my largest contribution to the visual geolocation field, sharpening the rough edges of the PLC approach. Rather than choosing an arbitrary set of gridlines to divide up a local area, we instead take inspiration from the R-CNN architecture, proposing potential division lines with apriori information [3]. While the potential applications are vast, the scope of this paper will concern a K-Means clustering of points by coordinate distance. I hope to demonstrate that these "natural" division lines lay a firmer groundwork for classification.
 
 
 ![Model Evaluations](./figures/table_2.png)
@@ -131,7 +99,7 @@ As suggested above, each problem approach will be evaluated using essentially th
 As a result of hardware limitations, I extract an 11,000 image subset containing an equal mix of Pittsburgh and Orlando instances. Each instance is labeled accordingly, and the model is trained using the architecture shown in Table 1. Panoramic Classification follows nearly the same methodology, except for every point in space (where each point corresponds to 5 images total), we append two images width-wise together, producing a new image of size 3x200x100. These new modified training images are then used to train a near-identical model with slight dimension accommodations listed in the rightmost column. Training will continue over 10 Epochs, and the best model is selected and assessed in the _Results_ section below.
 
 #### 4.2. Local Regression
-Local Regression discards labels in favor of training directly on the coordinates themselves. A 11, Pittsburgh-image sample is trained on using the L1 loss function, yet apart from these changes, the architecture and methodology remain the same. Training will continue over 10 Epochs, and the best model is selected and assessed in the Results section below.
+Local Regression discards labels in favor of training directly on the coordinates themselves. A 11, Pittsburgh-image sample is trained on using the _L1 loss_ function, yet apart from these changes, the architecture and methodology remain the same. Training will continue over 10 Epochs, and the best model is selected and assessed in the Results section below.
 
 
 #### 4.3. Partitioned and Clustered Local-Classification

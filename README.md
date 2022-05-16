@@ -5,7 +5,7 @@
 
 I explore multiple approaches to the problem of Visual Geolocation applied to Google Street View data of Pittsburgh, PA and Orlando, FL. I propose two approaches unique to this setting which I call *Panoramic Macro-Classification* and *Clustered Local-Classification* which both demonstrate significant improvement to model performance, the latter of which necessitates negligible computational cost. The trained model itself demonstrates attention to characteristic structures: building textures, skylines, cars, but also human agents. Additional Key Words and Phrases: neural networks, convolutional neural networks, geolocation.
 
-### 1 INTRODUCTION
+### 1. INTRODUCTION
 
 I define *Visual Geolocation* as the identification or approximation of a geographic position based on
 visual information. Previous research [4 , 6] from which this paper is inspired coins the similar term
@@ -38,7 +38,7 @@ at that point.
 ### 2. RELATED WORK
 Early work in Photo Geolocation compared query images (or relevant computed features of query
 images) to those of an accompanying dataset, where the breadth of the problem was in developing
-successful distance functions [1 , 7]. While promising, these methods necessitate the continu-
+successful distance functions [1,7]. While promising, these methods necessitate the continu-
 ous maintenance of comparison datasets, and the Nearest-Neighbor approach itself suffers from
 significant computational burden during test-time. It is for these reasons—alongside significant
 performance improvements—that convolutional neural networks have proved promising tools in
@@ -67,44 +67,19 @@ identify theInception nodeas its central innovation; it works, mainly, by allowi
 weight different filtersizesduring training by concatenating the feature outputs of multiple kernel
 sizes, largely escaping explosive computational overhead [5].
 
+![Three Perspective Images From Single Point in Space](./figures/fig_1.png)
 ```
 Fig. 1. Three perspective images from the same point in the dataset
 ```
 
 ```
-Visual Geolocation: Approaches, Challenges, and Insights 111:
-```
-```
 Table 1. Architecture of Conventional CNN
 ```
-```
-Layer Type Patch Size / Stride Input Size Input Size [Panoramic]
-CONV 3x3 / 1 3x100x100 3x200x
-CONV[padding: 2] 3x3 / 1 3x96x96 3x196x
-MAX-POOL 4x4 /2 30x96x96 30x196x
-CONV 4x4 / 2 30x47x47 30x147x
-CONV 4x4 / 1 20x23x23 20x123x
-MAX-POOL 4x4 / 2 30x20x20 30x120x
-LINEAR logits 1x1x2430 1x1x
-SOFTMAX classifier 1x1x2 1x1x
-```
+![Table 1. CNN Architecture](./figures/table_1.png)
+
 ### 3 APPROACH
 
-I intend to evaluate differing visual geolocation approaches by comparative analysis. Each of the
-trials (Conventional Macro-Classification (CMC), Panoramic Macro-Classification (PMC), Local-
-Regression (LR), Partitioned Local-Classification (PLC), and Clustered Local-Classification (CLC))
-described in further detail below are applied to a publicly available Google Street-View dataset
-provided by theCenter for Research in Computer Vision[ 7 ]. The set of nearly 63,000 images contains
-roughly 13,000 points in space which each correspond to 5 perspective images; which together
-comprise a 360 ◦view (excluding downward) from each spot. The placemarks are split relatively
-evenly between Pittsburgh, PA, Orlando, FL, and downtown Manhattan, NY, with a slight bias in
-favor of the former two cities.
-In addition, we execute these approaches utilizing an identical CNN architecture as described
-in Table 1; however, particular approaches necessitate slight accommodations: For instance, local
-regression follows itsLinearlayer with anL1 Lossfunction in place ofSoftmax, and Panoramic
-Macro-Classification takes input dimensions of double the conventional width. All of these changes
-will be listed in detail in the Experiment section below. Instead, this section lists my intuitions for
-each approach.
+I intend to evaluate differing visual geolocation approaches by comparative analysis. Each of the trials (Conventional Macro-Classification (CMC), Panoramic Macro-Classification (PMC), Local-Regression (LR), Partitioned Local-Classification (PLC), and Clustered Local-Classification (CLC)) described in further detail below are applied to a publicly available Google Street-View dataset provided by theCenter for Research in Computer Vision[ 7 ]. The set of nearly 63,000 images contains roughly 13,000 points in space which each correspond to 5 perspective images; which together comprise a 360◦ view (excluding downward) from each spot. The placemarks are split relatively evenly between Pittsburgh, PA, Orlando, FL, and downtown Manhattan, NY, with a slight bias in favor of the former two cities.In addition, we execute these approaches utilizing an identical CNN architecture as described in Table 1; however, particular approaches necessitate slight accommodations: For instance, local regression follows itsLinearlayer with anL1 Lossfunction in place ofSoftmax, and Panoramic Macro-Classification takes input dimensions of double the conventional width. All of these changes will be listed in detail in the Experiment section below. Instead, this section lists my intuitions for each approach.
 
 ```
 3.1 Conventional Macro-Classification
